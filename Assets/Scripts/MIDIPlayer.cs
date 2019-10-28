@@ -71,7 +71,7 @@ public class MIDIPlayer : MonoBehaviour
     // MonoBehaviour is enabled.
     void Update()
     {
-        midiSequencer.seteunjinset((int)bar.value*10);
+        //midiSequencer.seteunjinset((int)bar.value*10);
         if (!midiSequencer.isPlaying)
         {
             //if (!GetComponent<AudioSource>().isPlaying)

@@ -86,7 +86,7 @@ namespace CSharpSynth.Sequencer
             get { return looping; }
             set { looping = value; }
         }
-        public bool LoadMidi(MidiFile midi, bool UnloadUnusedInstruments)
+        public bool LoadMidi(MidiFile midi, bool UnloadUnusedInstruments, uint? bpm = null)
         {
             if (playing == true)
                 return false;
@@ -107,13 +107,13 @@ namespace CSharpSynth.Sequencer
                         //Update tempo
                         if (_MidiFile.Tracks[0].MidiEvents[x].midiMetaEvent == MidiHelper.MidiMetaEvent.Tempo)
                         {
-                            _MidiFile.BeatsPerMinute = MidiHelper.MicroSecondsPerMinute / System.Convert.ToUInt32(_MidiFile.Tracks[0].MidiEvents[x].Parameters[0]);
+                            _MidiFile.BeatsPerMinute = bpm ?? MidiHelper.MicroSecondsPerMinute / System.Convert.ToUInt32(_MidiFile.Tracks[0].MidiEvents[x].Parameters[0]);
                         }
                     }
                     //Set total time to proper value
                     _MidiFile.Tracks[0].TotalTime = _MidiFile.Tracks[0].MidiEvents[_MidiFile.Tracks[0].MidiEvents.Length-1].deltaTime;
                     //reset tempo
-                    _MidiFile.BeatsPerMinute = 120;
+                    _MidiFile.BeatsPerMinute = 300;
                     //mark midi as ready for sequencing
                     _MidiFile.SequencerReady = true;
                 }
@@ -156,6 +156,7 @@ namespace CSharpSynth.Sequencer
             {
                 //UnitySynth
                 Debug.Log("Error Loading Midi:\n" + ex.Message);
+                Debug.Log("Error Loading Midi:\n" + ex.StackTrace);
                 return false;
             }
             return LoadMidi(mf, UnloadUnusedInstruments);
@@ -169,7 +170,7 @@ namespace CSharpSynth.Sequencer
             //Clear vol, pan, and tune
             ResetControllers();
             //set bpm
-            _MidiFile.BeatsPerMinute = 120;
+            _MidiFile.BeatsPerMinute = 140;
             //Let the synth know that the sequencer is ready.
             eventIndex = 0;
             playing = true;
@@ -233,7 +234,7 @@ namespace CSharpSynth.Sequencer
                     //Clear vol, pan, and tune
                     ResetControllers();
                     //set bpm
-                    _MidiFile.BeatsPerMinute = 120;
+                    _MidiFile.BeatsPerMinute = 300;
                     //Let the synth know that the sequencer is ready.
                     eventIndex = 0;
                 }
