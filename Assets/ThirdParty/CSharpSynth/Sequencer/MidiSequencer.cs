@@ -21,15 +21,20 @@ namespace CSharpSynth.Sequencer
         private int sampleTime;
         private int eventIndex;
         private int eunjinset;
+        private uint eunjinbpm;
         //--Events
         public delegate void NoteOnEventHandler(int channel, int note, int velocity);
         public event NoteOnEventHandler NoteOnEvent;
         public delegate void NoteOffEventHandler(int channel, int note);
         public event NoteOffEventHandler NoteOffEvent;
         //--Public Properties
-        public void seteunjinset(int a)
+        public void seteunjinset(int parameter)
         {
-            eunjinset = a;
+            eunjinset = parameter;
+        }
+        public void seteunjinbpm(int parameter)
+        {
+            eunjinbpm = (uint)parameter;
         }
         public bool isPlaying
         {
@@ -113,7 +118,7 @@ namespace CSharpSynth.Sequencer
                     //Set total time to proper value
                     _MidiFile.Tracks[0].TotalTime = _MidiFile.Tracks[0].MidiEvents[_MidiFile.Tracks[0].MidiEvents.Length-1].deltaTime;
                     //reset tempo
-                    _MidiFile.BeatsPerMinute = 120;
+                    _MidiFile.BPM = this.eunjinbpm;
                     //mark midi as ready for sequencing
                     _MidiFile.SequencerReady = true;
                 }
@@ -169,7 +174,7 @@ namespace CSharpSynth.Sequencer
             //Clear vol, pan, and tune
             ResetControllers();
             //set bpm
-            _MidiFile.BeatsPerMinute = 120;
+            _MidiFile.BPM = this.eunjinbpm;
             //Let the synth know that the sequencer is ready.
             eventIndex = 0;
             playing = true;
@@ -233,7 +238,7 @@ namespace CSharpSynth.Sequencer
                     //Clear vol, pan, and tune
                     ResetControllers();
                     //set bpm
-                    _MidiFile.BeatsPerMinute = 120;
+                    _MidiFile.BPM = this.eunjinbpm;
                     //Let the synth know that the sequencer is ready.
                     eventIndex = 0;
                 }
@@ -359,7 +364,7 @@ namespace CSharpSynth.Sequencer
                 sampleTime = 0;
                 Array.Clear(currentPrograms, 0, currentPrograms.Length);
                 ResetControllers();
-                _MidiFile.BeatsPerMinute = 120;
+                _MidiFile.BPM = this.eunjinbpm;
                 eventIndex = 0;
                 SilentProcess(_stime);
             }

@@ -31,6 +31,10 @@ namespace CSharpSynth.Synthesis
         //Tweakable Parameters, anytime via properties
         private float MainVolume = 1.0f; //Not too high or will cause clipping
         //--Public Properties
+        public void setVoleunjin(float parameter)
+        {
+            MainVolume = parameter;
+        }
         public int BufferSize
         {
             get { return rawBufferLength; }

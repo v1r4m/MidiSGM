@@ -71,7 +71,9 @@ public class MIDIPlayer : MonoBehaviour
     // MonoBehaviour is enabled.
     void Update()
     {
-        midiSequencer.seteunjinset((int)bar.value*10);
+//        midiStreamSynthesizer.setVoleunjin(bar.value);
+        midiSequencer.seteunjinset((int)bar.value*2);
+        midiSequencer.seteunjinbpm((int)bar.value * 200);
         if (!midiSequencer.isPlaying)
         {
             //if (!GetComponent<AudioSource>().isPlaying)
@@ -114,7 +116,6 @@ public class MIDIPlayer : MonoBehaviour
         //	so calling into many Unity functions from this function is not allowed ( a warning will show up ). 	
         private void OnAudioFilterRead(float[] data, int channels)
     {
-        //This uses the Unity specific float method we added to get the buffer
         midiStreamSynthesizer.GetNext(sampleBuffer);
 
         for (int i = 0; i < data.Length; i++)
