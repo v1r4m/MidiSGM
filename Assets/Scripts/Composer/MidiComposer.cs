@@ -58,7 +58,7 @@ public class MidiComposer : MonoBehaviour
     }
     void ComposeNext()
     {
-        Debug.LogError("ComposeNext start");
+        Debug.Log("ComposeNext start");
         for (int i = 0; i < tracks.Count; i++)  // compose here!
         {
             if (!presets[preset].Contains(i.ToString())) continue;
@@ -74,7 +74,7 @@ public class MidiComposer : MonoBehaviour
             q.LoadSong(new CSharpSynth.Midi.MidiFile(a), bpm);
         }
         nextstart += (long)(16 * 60d / bpm * samplerate);
-        Debug.LogError("ComposeNext end");
+        Debug.Log("ComposeNext end");
     }
 
     private void OnAudioFilterRead(float[] data, int channels)
