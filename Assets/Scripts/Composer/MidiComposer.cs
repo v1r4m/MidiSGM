@@ -40,8 +40,7 @@ public class MidiComposer : MonoBehaviour
 
         foreach (var track in tracks)
             trackMidis.Add(new CSharpSynth.Midi.MidiFile(track));
-
-        ComposeNext();
+        
         StartCoroutine(ComposeRoutine());
     }
     void Update()
@@ -50,10 +49,12 @@ public class MidiComposer : MonoBehaviour
     }
     public IEnumerator ComposeRoutine()
     {
+        ComposeNext();
+        yield return new WaitForSeconds(length * 60/2/ bpm);
         while (true)
         {
             ComposeNext();
-            yield return new WaitForSeconds(16 * 60 / bpm);
+            yield return new WaitForSeconds(length * 60 / bpm);
         }
     }
     void ComposeNext()

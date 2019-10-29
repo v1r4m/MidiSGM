@@ -272,8 +272,10 @@
     <None Include="Assets\PostProcessing\Editor Resources\UI\Trackball.shader" />
     <None Include="Assets\Resources\GM Bank\IceRain.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\SynthStrings2.sfz.txt" />
+    <None Include="Assets\Resources\Durade-Sandstorm\ot\Vive_simple.mid.txt" />
     <None Include="Assets\Resources\Midis\SSBM_HyruleTemple_Alt_FireEmblem.mid.txt" />
     <None Include="Assets\Resources\GM Bank\Clav.sfz.txt" />
+    <None Include="Assets\Resources\Durade-Sandstorm\ot\Piano_s2.mid.txt" />
     <None Include="Assets\Resources\GM Bank\HarmonicGtr.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\Fiddle.sfz.txt" />
     <None Include="Assets\Resources\Midis\BattleGM.mid.txt" />
@@ -313,6 +315,7 @@
     <None Include="Assets\Resources\GM Bank\Whistle.sfz.txt" />
     <None Include="Assets\Resources\Durade-Sandstorm\RichSubBass.mid.txt" />
     <None Include="Assets\Resources\GM Bank\5thSawWave.sfz.txt" />
+    <None Include="Assets\Resources\Durade-Sandstorm\ot\Sax_s2.mid.txt" />
     <None Include="Assets\Resources\GM Bank\SFX.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\ElectricPiano2.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\BaritoneSax.sfz.txt" />
@@ -350,6 +353,7 @@
     <None Include="Assets\Resources\Midis\mirror_speedeaters2.mid.txt" />
     <None Include="Assets\Resources\GM Bank\ReedOrgan.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\PanFlute.sfz.txt" />
+    <None Include="Assets\Resources\Durade-Sandstorm\ot\Piano_s2s.mid.txt" />
     <None Include="Assets\Resources\GM Bank\Seashore.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\BottleBlow.sfz.txt" />
     <None Include="Assets\Resources\Durade-Sandstorm\Synth1.mid.txt" />
@@ -359,6 +363,7 @@
     <None Include="Assets\Resources\GM Bank\Orchestra.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\Helicopter.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\Jazz.sfz.txt" />
+    <None Include="Assets\Resources\Durade-Sandstorm\ot\Piano_simple.mid.txt" />
     <None Include="Assets\Resources\GM Bank\Fantasia.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\Power.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\Shanai.sfz.txt" />
