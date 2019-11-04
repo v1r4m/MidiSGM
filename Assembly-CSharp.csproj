@@ -116,6 +116,7 @@
     <Compile Include="Assets\Scenes\Visualizers\MusicSyncVisualizer\AudioSyncScale.cs" />
     <Compile Include="Assets\Scripts\Composer\MidiComposer.cs" />
     <Compile Include="Assets\Scripts\Composer\MidiTrack.cs" />
+    <Compile Include="Assets\Scripts\Composer\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\MIDIPlayer.cs" />
     <Compile Include="Assets\ThirdParty\CSharpSynth\Banks\Analog\AnalogInstrument.cs" />
     <Compile Include="Assets\ThirdParty\CSharpSynth\Banks\BankManager.cs" />

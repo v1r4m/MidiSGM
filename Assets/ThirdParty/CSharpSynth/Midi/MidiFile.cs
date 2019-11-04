@@ -46,15 +46,21 @@ namespace CSharpSynth.Midi
         {
             get { return mheader; }
         }
-        //--Public Methods
         public MidiFile(string filename)
+            :  this(Resources.Load(filename) as TextAsset)
+        {
+           
+        }
+
+        //--Public Methods
+        public MidiFile(TextAsset file)
         {
             Stream midiStream = null;
             try
             {
                 //UnitySynth
                 //midiStream = File.Open(filename, FileMode.Open);
-                TextAsset midiFileName = Resources.Load(filename) as TextAsset;
+                TextAsset midiFileName = file;
                 midiStream = new MemoryStream(midiFileName.bytes);
                 loadStream(midiStream);
             }
