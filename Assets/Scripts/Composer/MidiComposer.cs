@@ -148,16 +148,24 @@ public struct Tracks
     public string hash;
     public bool solo;
 }
+[Serializable]
+public struct TracksSet
+{
+    public string name;
+    public List<string> presets;
+}
 
 
 public class MidiComposer : MonoBehaviour
 {
-    public List<string> presets;
-    public List<Tracks> tracks;
+    [SerializeField]  public List<Tracks> localTracks;
+    [SerializeField]  public List<TracksSet> tracksets;
+    [SerializeField]  public List<string> presets;
+    [SerializeField]  public List<string> flows;
+    [SerializeField]  public List<Tracks> globalTracks;
 
     List<KeyValuePair<long, MIDITrack>> playing = new List<KeyValuePair<long, MIDITrack>>();
     List<MIDITrack> halted = new List<MIDITrack>();
-    List<CSharpSynth.Midi.MidiFile> trackMidis;
     const long samplerate = 44100;
 
     //debug vars, can remove
@@ -179,15 +187,10 @@ public class MidiComposer : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        trackMidis = new List<CSharpSynth.Midi.MidiFile>();
-
         for (int i = 0; i < 30; i++)
             halted.Add(new MIDITrack());
         foreach (var a in halted) a.Init();
 
-        foreach (var track in tracks)
-            trackMidis.Add(new CSharpSynth.Midi.MidiFile(track.midi));
-        
         StartCoroutine(ComposeRoutine());
     }
     void Update()
@@ -208,30 +211,40 @@ public class MidiComposer : MonoBehaviour
     {
         Debug.Log("ComposeNext start");
         //todo: implement solo
-        for (int i = 0; i < tracks.Count; i++)  // compose here!
+        for (int i = 0; i < globalTracks.Count; i++)  // compose here!
         {
-            if (!tracks[i].isplaying) continue; // compose here!
-            var a = tracks[i];
+            if (!globalTracks[i].isplaying) continue; // compose here!
+            var a = globalTracks[i];
             var q = halted.FirstOrDefault();
 
             if (q != null) halted.Remove(q);
             else { q = new MIDITrack(); q.Init(); }
 
+            q.LoadSong(new CSharpSynth.Midi.MidiFile(a.midi), bpm);
 
             lock (playing)
                 playing.Add(new KeyValuePair<long, MIDITrack>( nextstart, q));//todo: force bpm
-            q.LoadSong(new CSharpSynth.Midi.MidiFile(a.midi), bpm);
+           
         }
         nextstart += (long)(16 * 60d / bpm * samplerate);
         Debug.Log("ComposeNext end");
     }
-
+    private void PlayReset()
+    {
+        currentFrame = 0;
+        foreach (var a in playing)
+        {
+            halted.Add(a.Value);
+        }
+        playing.Clear();
+    }
     private void OnAudioFilterRead(float[] data, int channels)
     {
         lock (playing)
+        {
             for (int i = 0; i < playing.Count; i++)
             {
-                if (currentFrame > playing[i].Key + (length*2) * 60d / bpm * samplerate)//make isplaying and remove here
+                if (currentFrame > playing[i].Key + (length * 2) * 60d / bpm * samplerate)//make isplaying and remove here
                 {
                     var a = playing[i].Value;
                     halted.Add(a);
@@ -239,9 +252,11 @@ public class MidiComposer : MonoBehaviour
                     i--;
                 }
             }
+        }
         for (int i = 0; i < data.Length; i++)
             data[i] = 0;
         lock (playing)
+        {
             foreach (var a in playing)
             {
                 if (currentFrame < a.Key)
@@ -253,6 +268,7 @@ public class MidiComposer : MonoBehaviour
                     data[i] += sample[i] * track.gain;
                 }
             }
+        }
         
         currentFrame += bufferSize;
         

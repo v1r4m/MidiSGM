@@ -95,6 +95,7 @@
     <Compile Include="Assets\PostProcessing\Editor\Utils\EditorResources.cs" />
     <Compile Include="Assets\PostProcessing\Editor\Utils\FxStyles.cs" />
     <Compile Include="Assets\PostProcessing\Editor\Utils\ReflectionUtils.cs" />
+    <Compile Include="Assets\Scripts\Composer\Editor\MidiComposerEditor.cs" />
     <Compile Include="Assets\Scripts\Composer\Editor\MidiComposerUI.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/woong/Documents/_Git/MidiSGM/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
@@ -362,6 +363,9 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>C:/Users/woong/Documents/_Git/MidiSGM/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:/Users/woong/Documents/_Git/MidiSGM/Assets/WanzyeeStudio/ThirdParty/SaladLab/Json.Net.Unity3D/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.9f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -722,6 +726,10 @@
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{2CF349A7-488D-E6D7-542B-E286E29BA7E2}</Project>
       <Name>Assembly-CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="WanzyeeStudio.Runtime.csproj">
+      <Project>{1496A137-B0F7-96CB-435F-6911F6471FBA}</Project>
+      <Name>WanzyeeStudio.Runtime</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
