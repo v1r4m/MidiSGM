@@ -139,22 +139,6 @@ public enum MidiInstrument
     GUNSHOT = 128
 }
 
-[Serializable]
-public struct Tracks
-{
-    public TextAsset midi;
-    public MidiInstrument instrument;
-    public bool isplaying;
-    public string hash;
-    public bool solo;
-}
-[Serializable]
-public struct TracksSet
-{
-    public string name;
-    public List<string> presets;
-}
-
 
 public class MidiComposer : MonoBehaviour
 {
