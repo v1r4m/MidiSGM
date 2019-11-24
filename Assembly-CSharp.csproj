@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{2CF349A7-488D-E6D7-542B-E286E29BA7E2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -61,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\DatabaseObj.cs" />
     <Compile Include="Assets\MidiJack\Midi.cs" />
     <Compile Include="Assets\MidiJack\MidiDriver.cs" />
     <Compile Include="Assets\MidiJack\MidiMaster.cs" />
@@ -314,7 +314,7 @@
     <None Include="Assets\Resources\Durade-Sandstorm\ot\Vive_simple.mid.txt" />
     <None Include="Assets\Resources\Midis\SSBM_HyruleTemple_Alt_FireEmblem.mid.txt" />
     <None Include="Assets\Resources\GM Bank\Clav.sfz.txt" />
-    <None Include="Assets\Resources\Durade-Sandstorm\ot\Piano_s2.mid.txt" />
+    <None Include="Assets\Resources\Durade-Sandstorm\Piano_s2.mid.txt" />
     <None Include="Assets\Resources\GM Bank\HarmonicGtr.sfz.txt" />
     <None Include="Assets\Resources\GM Bank\Fiddle.sfz.txt" />
     <None Include="Assets\SGMComposer\Resources\chords_piano\F1-1.mid.txt" />
@@ -661,6 +661,9 @@
     <Reference Include="Midi">
       <HintPath>C:/Users/woong/Documents/_Git/MidiSGM/Assets/Plugins/Midi.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:/Users/woong/Documents/_Git/MidiSGM/Assets/SGMComposer/WanzyeeStudio/ThirdParty/SaladLab/Json.Net.Unity3D/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>C:/Users/woong/Documents/_Git/MidiSGM/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
@@ -669,9 +672,6 @@
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>C:/Users/woong/Documents/_Git/MidiSGM/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:/Users/woong/Documents/_Git/MidiSGM/Assets/SGMComposer/WanzyeeStudio/ThirdParty/SaladLab/Json.Net.Unity3D/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.9f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

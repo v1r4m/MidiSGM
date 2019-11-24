@@ -239,3 +239,6 @@ C:\Users\woong\Documents\_Git\MidiSGM\Temp\bin\Debug\Unity.PackageManagerUI.Edit
 C:\Users\woong\Documents\_Git\MidiSGM\Temp\bin\Debug\Unity.CollabProxy.Editor.pdb
 C:\Users\woong\Documents\_Git\MidiSGM\Temp\bin\Debug\Unity.TextMeshPro.pdb
 C:\Users\woong\Documents\_Git\MidiSGM\Temp\bin\Debug\Unity.Analytics.DataPrivacy.pdb
+C:\Users\woong\Documents\_Git\MidiSGM\Temp\bin\Debug\Newtonsoft.Json.dll
+C:\Users\woong\Documents\_Git\MidiSGM\Temp\bin\Debug\UnityEditor.UI.dll
+C:\Users\woong\Documents\_Git\MidiSGM\Temp\bin\Debug\WanzyeeStudio.Runtime.pdb

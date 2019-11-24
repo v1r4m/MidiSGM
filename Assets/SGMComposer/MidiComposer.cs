@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using static MidiComposerCore;
 public enum MidiInstrument
 {
+    Default = -1,
     ACOUSTIC_GRAND_PIANO = 1,
     BRIGHT_ACOUSTIC_PIANO = 2,
     ELECTRIC_GRAND_PIANO = 3,
@@ -142,12 +143,6 @@ public enum MidiInstrument
 
 public class MidiComposer : MonoBehaviour
 {
-    [SerializeField]  public List<Tracks> localTracks;
-    [SerializeField]  public List<TracksSet> tracksets;
-    [SerializeField]  public List<string> presets;
-    [SerializeField]  public List<string> flows;
-    [SerializeField]  public List<Tracks> globalTracks;
-
     List<KeyValuePair<long, MIDITrack>> playing = new List<KeyValuePair<long, MIDITrack>>();
     List<MIDITrack> halted = new List<MIDITrack>();
     const long samplerate = 44100;
@@ -184,7 +179,7 @@ public class MidiComposer : MonoBehaviour
     public IEnumerator ComposeRoutine()
     {
         ComposeNext();
-        yield return new WaitForSeconds(length * 60/2/ bpm);
+        yield return new WaitForSeconds(length * 60 / 2 / bpm);
         while (true)
         {
             ComposeNext();
@@ -195,10 +190,10 @@ public class MidiComposer : MonoBehaviour
     {
         Debug.Log("ComposeNext start");
         //todo: implement solo
-        for (int i = 0; i < globalTracks.Count; i++)  // compose here!
+        var next = ComposerCore.Instance.GetNext();
+        for (int i = 0; i < next.Count; i++)  // compose here!
         {
-            if (!globalTracks[i].isplaying) continue; // compose here!
-            var a = globalTracks[i];
+            var a = next[i];
             var q = halted.FirstOrDefault();
 
             if (q != null) halted.Remove(q);
@@ -207,7 +202,7 @@ public class MidiComposer : MonoBehaviour
             q.LoadSong(new CSharpSynth.Midi.MidiFile(a.midi), bpm);
 
             lock (playing)
-                playing.Add(new KeyValuePair<long, MIDITrack>( nextstart, q));//todo: force bpm
+                playing.Add(new KeyValuePair<long, MIDITrack>(nextstart, q));//todo: force bpm
            
         }
         nextstart += (long)(16 * 60d / bpm * samplerate);
