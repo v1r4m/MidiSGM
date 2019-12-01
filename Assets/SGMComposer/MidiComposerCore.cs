@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using Newtonsoft.Json;
+using System.IO;
 
 static public class MidiComposerCore
 {
@@ -58,11 +59,12 @@ static public class MidiComposerCore
             public bool isplaying;
             public string name;
             public bool issolo;
+#if UNITY_EDITOR
             public SerializableTrack() { }
             public SerializableTrack(Track t)
             {
                 if (t.midi != null)
-                    this.midi = AssetDatabase.GetAssetPath(t.midi).Remove(0, 17);
+                    this.midi = AssetDatabase.GetAssetPath(t.midi);
                 else
                     this.midi = null;
                 this.instrument = t.instrument;
@@ -74,13 +76,14 @@ static public class MidiComposerCore
             {
                 return new Track()
                 {
-                    midi = (this.midi == null ? null : Resources.Load<TextAsset>(this.midi)),
+                    midi = (this.midi == null ? null : (TextAsset)AssetDatabase.LoadAssetAtPath(this.midi, typeof(TextAsset))),
                     instrument = this.instrument,
                     isplaying = this.isplaying,
                     name = this.name,
                     issolo = this.issolo
                 };
             }
+#endif
         }
         public string Serialize()
         {
@@ -114,9 +117,31 @@ static public class MidiComposerCore
     }
     public class ComposerCore
     {
-        static ComposerCore instance = null;
-        public static ComposerCore Instance { get { return instance ?? new ComposerCore(); } }
-        private ComposerCore() { }
+        const string resourceDir = "Assets\\Resources\\";
+        const string savedir = "ComposerSav.sav";
+        public ComposerCore()
+        {
+            if (File.Exists(resourceDir + savedir + ".txt"))
+                d = Data.Desrialize(File.ReadAllText(resourceDir + savedir + ".txt"));
+            else
+            {
+                var r = Resources.Load<TextAsset>(savedir);
+                if (r != null)
+                    d = Data.Desrialize(Resources.Load<TextAsset>(savedir).text);
+                else d = new Data();
+            }
+#if UNITY_EDITOR
+            var notAddedTracks =  AssetDatabase.GetAllAssetPaths().Where(a => a.EndsWith(".mid.txt") && !d.tracks.Exists(q => AssetDatabase.GetAssetPath(q.midi).Equals(a)));
+            foreach (string natdir in notAddedTracks)
+            {
+                d.tracks.Add(new Track()
+                {
+                    name = natdir.Remove(natdir.Length - 8, 8).Split('/').Last(),
+                    midi = (TextAsset)AssetDatabase.LoadAssetAtPath(natdir, typeof(TextAsset))
+                });
+            }
+#endif
+        }
         public Data d = new Data();
         public PlayingData p = new PlayingData();
         public int seqNo = 0;
@@ -126,6 +151,7 @@ static public class MidiComposerCore
 
         public List<Track> GetNext()
         {
+            if (d.tracksets.Count == 0 || p.preset_flow_name == null) return new List<Track>();
             TracksSet ts = d.tracksets[p.trackset];
             switch (p.mode)
             {
@@ -143,7 +169,7 @@ static public class MidiComposerCore
         {
             var @return = new List<Track>();
             foreach (var ss in s)
-                @return.Add(ts.First(q => q.name.Equals(s)));
+                @return.Add(ts.First(q => q.name.Equals(ss)));
             return @return;
         }
     }

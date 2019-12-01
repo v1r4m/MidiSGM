@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEditorInternal;
@@ -22,9 +23,11 @@ public static class StringStringListTupleListExtension
     public static Dictionary<string,List<string>> ToStringListDic(this List<StringStringListTuple> list)
     {
         Dictionary<string, List<string>> r = new Dictionary<string, List<string>>();
-        char[] delimiters = new[] { ',' };
         foreach (var a in list)
-            r.Add(a.key, new List<string>(a.val.Split(delimiters,StringSplitOptions.RemoveEmptyEntries)));
+            r.Add(a.key, new List<string>(a.val.Split(',')
+                                            .Select(x => x.Trim())
+                                            .Where(x => !string.IsNullOrWhiteSpace(x))
+                                            .ToArray()));
         return r;
     }
     public static List<StringStringListTuple> ToSSTuple(this Dictionary<string, List<string>>  list)
@@ -58,6 +61,7 @@ public class MidiComposerEditor : EditorWindow
     [MenuItem("Window/Midi SGM Composer Editor")]
     public static void ShowWindow()
     {
+        composer = new ComposerCore();
         MidiComposerEditor win = EditorWindow.GetWindow(typeof(MidiComposerEditor)) as MidiComposerEditor;
         
         win.Show();
@@ -77,16 +81,15 @@ public class MidiComposerEditor : EditorWindow
     
     static DBOBJ mc;
     static SerializedObject so;
-    const string savedir = "ComposerSav.sav";
+    const string resourceDir = "Assets\\Resources\\";
+    const string savedir = "ComposerSav.sav.txt";
     static System.Random rng = new System.Random();
 
     void OnEnable()
     {
         if (composer == null)
         {
-            composer = ComposerCore.Instance;
-            if (File.Exists(savedir))
-                composer.d = Data.Desrialize(File.ReadAllText(savedir));
+            composer = new ComposerCore();
         }
         Debug.Log("MidiCompoerEditor is Awake!");
 
@@ -168,8 +171,12 @@ public class MidiComposerEditor : EditorWindow
                  element.FindPropertyRelative("val"), GUIContent.none);
              if (GUI.Button(new Rect(rect.x + rect.width - 20, rect.y, 20, EditorGUIUtility.singleLineHeight), "P"))
              {
-                 ComposerCore.Instance.p.preset_flow_name = mc.presets[index].key;
-                 ComposerCore.Instance.p.mode = PlayingData.Mode.preset;
+                 var o = FindObjectOfType<MidiComposer>();
+                 if (o != null)
+                 {
+                     o.playName = mc.flows[index].key;
+                     o.mode = PlayingData.Mode.preset;
+                 }
              }
          };
         presetsRL.onAddDropdownCallback = (Rect buttonRect, ReorderableList l) => {
@@ -202,8 +209,12 @@ public class MidiComposerEditor : EditorWindow
 
              if (GUI.Button(new Rect(rect.x + rect.width - 20, rect.y, 20, EditorGUIUtility.singleLineHeight), "P"))
              {
-                 ComposerCore.Instance.p.preset_flow_name = mc.flows[index].key;
-                 ComposerCore.Instance.p.mode = PlayingData.Mode.flow;
+                 var o = FindObjectOfType<MidiComposer>();
+                 if (o != null)
+                 {
+                     o.playName = mc.flows[index].key;
+                     o.mode = PlayingData.Mode.flow;
+                 }
              }
          };
 
@@ -215,7 +226,7 @@ public class MidiComposerEditor : EditorWindow
     }
     void OnDisable()
     {
-        File.WriteAllText(savedir, composer.d.Serialize());
+        File.WriteAllText(resourceDir+savedir, composer.d.Serialize());
     }
     private void ClickHandler(object target)
     {
@@ -238,16 +249,19 @@ public class MidiComposerEditor : EditorWindow
     bool trackListFold = true;
 
     int selectedTrackset = 0;
+    Vector2 scrollPos = new Vector2();
     void OnGUI()
     {
+
         if (so == null) OnEnable();
         if (selectedTrackset == composer.d.tracksets.Count)
             composer.d.tracksets.Add(new TracksSet());
 
         mc.presets = composer.d.tracksets[selectedTrackset].presets.ToSSTuple();
         mc.flows = composer.d.tracksets[selectedTrackset].flows.ToSSTuple();
-        so. Update();
-
+        mc.setName = composer.d.tracksets[selectedTrackset].name;
+        so.Update();
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
         if (trackListFold = EditorGUILayout.Foldout(trackListFold, "All Tracks"))
         {
             globalTracksRL.DoLayoutList();
@@ -269,10 +283,15 @@ public class MidiComposerEditor : EditorWindow
     
         presetsRL.DoLayoutList();
         flowsRL.DoLayoutList();
-        
-        so.ApplyModifiedProperties();
+        EditorGUILayout.EndScrollView();
+        var ischanged = so.ApplyModifiedProperties();
 
-        composer.d.tracksets[selectedTrackset].presets = mc.presets.ToStringListDic();
-        composer.d.tracksets[selectedTrackset].flows = mc.flows.ToStringListDic();
+        if (lastSelected == selectedTrackset)
+        {
+            composer.d.tracksets[selectedTrackset].presets = mc.presets.ToStringListDic();
+            composer.d.tracksets[selectedTrackset].flows = mc.flows.ToStringListDic();
+            composer.d.tracksets[selectedTrackset].name = mc.setName;
+        }
+            
     }
 }

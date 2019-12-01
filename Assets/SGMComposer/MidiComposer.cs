@@ -146,17 +146,18 @@ public class MidiComposer : MonoBehaviour
     List<KeyValuePair<long, MIDITrack>> playing = new List<KeyValuePair<long, MIDITrack>>();
     List<MIDITrack> halted = new List<MIDITrack>();
     const long samplerate = 44100;
-
+    public ComposerCore c;
     //debug vars, can remove
     float leftShit;
 
     long nextstart = 0;
-    float length = 16;
+    float length = 4;
     
 
     public int bpm = 140;
 
-    public int preset = 0;
+    public string playName;
+    public PlayingData.Mode mode;
 
     //debug public, set to private!!!
     public long currentFrame = 0;
@@ -166,31 +167,25 @@ public class MidiComposer : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        c = new ComposerCore();
         for (int i = 0; i < 30; i++)
             halted.Add(new MIDITrack());
         foreach (var a in halted) a.Init();
-
-        StartCoroutine(ComposeRoutine());
     }
     void Update()
     {
+        c.p.preset_flow_name =  playName;
+        c.p.mode = mode;
         leftShit = halted.Count;
-    }
-    public IEnumerator ComposeRoutine()
-    {
-        ComposeNext();
-        yield return new WaitForSeconds(length * 60 / 2 / bpm);
-        while (true)
-        {
+ 
+        if (nextstart < currentFrame + (16 * 60d / bpm * samplerate))
             ComposeNext();
-            yield return new WaitForSeconds(length * 60 / bpm);
-        }
     }
     void ComposeNext()
     {
         Debug.Log("ComposeNext start");
         //todo: implement solo
-        var next = ComposerCore.Instance.GetNext();
+        var next = c.GetNext();
         for (int i = 0; i < next.Count; i++)  // compose here!
         {
             var a = next[i];
@@ -205,7 +200,7 @@ public class MidiComposer : MonoBehaviour
                 playing.Add(new KeyValuePair<long, MIDITrack>(nextstart, q));//todo: force bpm
            
         }
-        nextstart += (long)(16 * 60d / bpm * samplerate);
+        nextstart += (long)(length * 60d / bpm * samplerate);
         Debug.Log("ComposeNext end");
     }
     private void PlayReset()
@@ -217,6 +212,8 @@ public class MidiComposer : MonoBehaviour
         }
         playing.Clear();
     }
+    bool doComposeNext = true;
+
     private void OnAudioFilterRead(float[] data, int channels)
     {
         lock (playing)
